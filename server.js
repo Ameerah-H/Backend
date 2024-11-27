@@ -30,7 +30,17 @@ app.get('/collection/lessons', async (req, res, next) => {
     }
 });
 
+app.post('/collection/checkout', (req, res, next) => {
+    const checkoutData = req.body;
 
+    // Insert the posted data into the collection
+    db.collection("checkout").insertOne(checkoutData, (err, result) => {
+        if (err) return next(err);
+
+        // Respond with the inserted document
+        res.status(201).send(result.ops[0]); // `ops` contains the inserted document(s)
+    });
+});
 
 
 const port = process.env.PORT || 3000

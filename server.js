@@ -80,7 +80,7 @@ app.get('/collection/search', (req, res) => {
     const searchCriteria = {
         $or: [
             { subject: { $regex: query, $options: 'i' } },
-            
+            { location: { $regex: query, $options: 'i' } }
         ]
     };
 

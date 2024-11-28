@@ -41,6 +41,33 @@ app.post('/collection/checkout', (req, res, next) => {
         res.status(201).send(result.ops[0]); // `ops` contains the inserted document(s)
     });
 });
+//put
+const { ObjectId } = require('mongodb'); // Ensure ObjectId is imported
+
+app.put('/collection/lessons/:_id', (req, res, next) => {
+    
+    const id = req.params._id; //get the id from url
+    const updateData = req.body;
+    console.log("Received ID:", req.params._id);
+    console.log("Received Data:", req.body);
+    if (!ObjectId.isValid(id)) {
+        return res.status(400).send({ msg: 'Invalid ID format' });
+    }
+
+    db.collection('lessons').updateOne(
+        { _id: new ObjectId(id) }, // Match the document by ID
+        { $set: updateData },
+        { safe: true, multi: false },
+        (err, result) => {
+            if (err) return next(err);
+            if (result.matchedCount === 0) {
+                return res.status(404).send({ msg: 'Document not found' });
+            }
+            res.send({ msg: 'Update successful', updatedCount: result.modifiedCount });
+        }
+    );
+});
+
 
 
 const port = process.env.PORT || 3000

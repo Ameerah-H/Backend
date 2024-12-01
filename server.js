@@ -64,6 +64,7 @@ app.post('/collection/checkout', (req, res, next) => {
 
         // Respond with the inserted document
         res.status(201).send(result.ops[0]); // `ops` contains the inserted document(s)
+        console.log('Successfully inserted the user details in the database. ');
     });
 });
 //put

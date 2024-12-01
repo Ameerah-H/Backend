@@ -48,6 +48,7 @@ app.get('/collection/lessons', async (req, res, next) => {
         // Query the 'lessons' collection for all documents
         const lessons = await db.collection('lessons').find().toArray();
         res.json(lessons); // Send the lessons as a JSON response
+        console.log('Successfully sent the lessons as a JSON response');
     } catch (error) {
         console.error('Error retrieving lessons:', error);
         res.status(500).send('Error retrieving lessons');

@@ -25,6 +25,23 @@ app.use((req, res, next) => {
     next(); // Move to the next middleware or route
 });
 
+const path = require('path');
+const fs = require('fs');
+
+// Static File Middleware
+app.use('/images', (req, res) => {
+    const imagePath = path.join(__dirname, '../frontend/images', req.path); // Construct image file path
+
+    fs.access(imagePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            console.error(`Image not found: ${imagePath}`); // Log error if file doesn't exist
+            res.status(404).send({ msg: 'Image file does not exist' });
+        } else {
+            res.sendFile(imagePath); // Serve the image file
+        }
+    });
+});
+
 
 app.get('/collection/lessons', async (req, res, next) => {
     try {

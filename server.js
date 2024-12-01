@@ -18,6 +18,13 @@ app.use((req, res, next) => {
     );
     next();
 });
+// Logger Middleware
+app.use((req, res, next) => {
+    const timestamp = new Date().toISOString(); // Get current timestamp
+    console.log(`[${timestamp}] ${req.method} request to ${req.url}`);
+    next(); // Move to the next middleware or route
+});
+
 
 app.get('/collection/lessons', async (req, res, next) => {
     try {
@@ -74,6 +81,7 @@ app.get('/collection/search', (req, res) => {
     const query = req.query.q; // Get search query from the request
     if (!query) {
         return res.status(400).send({ msg: 'Search query is required' });
+
     }
 
     // Define the search criteria (case-insensitive search on `subject` or `description`)

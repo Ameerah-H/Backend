@@ -8,6 +8,7 @@ let db;
 MongoClient.connect('mongodb+srv://ameeraharis369:pac30nov@cluster0.kyxtfvq.mongodb.net', (err, client) => {
     db = client.db('webstore')
 })
+//CORS MIDDLEWARE
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -42,10 +43,9 @@ app.use('/images', (req, res) => {
     });
 });
 
-
+// Query the 'lessons' collection for all documents
 app.get('/collection/lessons', async (req, res, next) => {
-    try {
-        // Query the 'lessons' collection for all documents
+    try {  
         const lessons = await db.collection('lessons').find().toArray();
         res.json(lessons); // Send the lessons as a JSON response
         console.log('Successfully sent the lessons as a JSON response');
@@ -54,7 +54,7 @@ app.get('/collection/lessons', async (req, res, next) => {
         res.status(500).send('Error retrieving lessons');
     }
 });
-
+//posting the checkout details to database
 app.post('/collection/checkout', (req, res, next) => {
     const checkoutData = req.body;
 
@@ -63,16 +63,16 @@ app.post('/collection/checkout', (req, res, next) => {
         if (err) return next(err);
 
         // Respond with the inserted document
-        res.status(201).send(result.ops[0]); // `ops` contains the inserted document(s)
+        res.status(201).send(result.ops[0]); // `ops` contains the inserted document
         console.log('Successfully inserted the user details in the database. ');
     });
 });
-//put
-const { ObjectId } = require('mongodb'); // Ensure ObjectId is imported
+//put- updating the available spaces
+const { ObjectId } = require('mongodb'); 
 
 app.put('/collection/lessons/:_id', (req, res, next) => {
     
-    const id = req.params._id; //get the id from url
+    const id = req.params._id; //getting the id from url
     const updateData = req.body;
     console.log("Received ID:", req.params._id);
     console.log("Received Data:", req.body);
@@ -81,7 +81,7 @@ app.put('/collection/lessons/:_id', (req, res, next) => {
     }
 
     db.collection('lessons').updateOne(
-        { _id: new ObjectId(id) }, // Match the document by ID
+        { _id: new ObjectId(id) }, 
         { $set: updateData },
         { safe: true, multi: false },
         (err, result) => {
@@ -122,7 +122,7 @@ app.get('/collection/search', (req, res) => {
         });
 });
 
-
+//listening in port 3000
 const port = process.env.PORT || 3000
 app.listen(port, () => {
     console.log('Express.js server running at localhost 3000')
